@@ -1,27 +1,25 @@
-import { User } from 'src/users/entities/user.entity';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
 import { Chat } from './chat.entity';
+import { User } from 'src/users/entities/user.entity';
+import { Attachment } from './attachment.entity';
 
 @Entity('messages')
 export class Message {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  content: string;
+  text: string;
 
-  @ManyToOne(() => User, (user) => user.messages)
+  @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
+  timestamp: Date;
+
+  @ManyToOne(() => User, (user) => user.sentMessages)
   sender: User;
 
   @ManyToOne(() => Chat, (chat) => chat.messages)
   chat: Chat;
 
-  @CreateDateColumn()
-  createdAt: Date;
+  @OneToMany(() => Attachment, (attachment) => attachment.message)
+  attachments: Attachment[];
 }

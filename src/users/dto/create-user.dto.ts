@@ -20,10 +20,11 @@ export class CreateUserDto {
   
     @Transform(lowerCaseTransformer)
     username: string;
-    
 
     
-    @ApiProperty()
+    
+    
+    @ApiProperty({ example: 'password123'})
     @IsString()
     @MinLength(6)
     @MaxLength(50)
@@ -42,6 +43,12 @@ export class CreateUserDto {
     @IsString()
     @IsNotEmpty()
     lastName: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    avatar: string;
+
 
     @ApiProperty({example: 'refreshToken'})
     @IsString()

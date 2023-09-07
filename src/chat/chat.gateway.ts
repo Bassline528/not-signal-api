@@ -10,12 +10,6 @@ export class ChatGateway {
   @WebSocketServer() server: Server;
 
   async handleConnection(client: Socket) {
-    const senderId = client.handshake.query.senderId;
-    const recipientId = client.handshake.query.recipientId;
-
-    const senderPublicKey = client.handshake.query.senderPublicKey;
-
-    const recipientPublicKey = 'asd';
-    client.emit('publicKeyExchange', { userId: recipientId, publicKey: recipientPublicKey });
+    
   }
 }

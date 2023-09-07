@@ -1,32 +1,26 @@
-import { User } from 'src/users/entities/user.entity';
-import {
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, OneToMany, ManyToOne } from 'typeorm';
 import { Message } from './message.entity';
+import { UserChat } from './user-chat.entity';
+import { User } from 'src/users/entities/user.entity';
 
-@Entity()
+@Entity('chats')
 export class Chat {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  name: string;
+  name: string; // For group chats
 
-  @ManyToMany(() => User, user => user.chats)
-  @JoinTable()
-  users: User[];
+  @Column()
+  type: string; 
 
-  @OneToMany(() => Message, message => message.chat)
+
+  @OneToMany(() => UserChat, (userChat) => userChat.chat)
+  chatMembers: UserChat[];
+
+  @OneToMany(() => Message, (message) => message.chat)
   messages: Message[];
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  createdAt: Date;
-
-  @Column({ type: 'timestamp', nullable: true })
-  endedAt: Date | null; // Nullable to indicate that the chat might not have ended yet.
+  @ManyToOne(() => User, (user) => user.createdChats)
+  creator: User;
 }

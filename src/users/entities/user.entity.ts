@@ -1,9 +1,12 @@
 import { Chat } from 'src/chat/entities/chat.entity';
+import { Message } from 'src/chat/entities/message.entity';
+import { UserChat } from 'src/chat/entities/user-chat.entity';
 import {
   Column,
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -17,6 +20,13 @@ export class User {
     unique: true,
   })
   email: string;
+
+  @Column('text',
+  {
+    nullable: true,
+  }
+  )
+  avatar?: string;
 
   @Column('text', {
     unique: true,
@@ -47,10 +57,14 @@ export class User {
     default: ['user'],
   })
   roles: string[];
-    messages: any;
 
-  @ManyToMany(() => Chat, chat => chat.users)
-  @JoinTable()
-  chats: Chat[];
+  @OneToMany(() => Chat, (chat) => chat.creator)
+  createdChats: Chat[];
+
+  @OneToMany(() => UserChat, (userChat) => userChat.user)
+  userChats: UserChat[];
+
+  @OneToMany(() => Message, (message) => message.sender)
+  sentMessages: Message[];
  
 }
