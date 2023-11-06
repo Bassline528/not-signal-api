@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Body, HttpStatus, HttpCode, UseGuards, Req, Patch } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { Auth } from './decorators/auth.decorator';
 import { GetUser } from './decorators/get-user.decorator';
-import { User } from 'src/users/entities/user.entity';
+import { User } from 'src/user/entities/user.entity';
 import AuthDto from './dto/auth.dto';
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
 import { ApiTags } from '@nestjs/swagger';

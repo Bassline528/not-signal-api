@@ -9,10 +9,12 @@ import appConfig from './config/app.config';
 // import mailConfig from './config/mail.config';
 // import fileConfig from './config/file.config';
 // import googleConfig from './config/google.config';
-import { UsersModule } from './users/users.module';
+import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmConfigService } from './database/typeorm-config.services';
 import { DataSource, DataSourceOptions } from 'typeorm';
+import { RoomModule } from './room/room.module';
+import { ChatGateway } from './chat/chat.gateway';
 import { ChatModule } from './chat/chat.module';
 
 
@@ -36,9 +38,11 @@ import { ChatModule } from './chat/chat.module';
         return new DataSource(options).initialize();
       },
     }),
-    UsersModule,
+    UserModule,
     AuthModule,
+    RoomModule,
     ChatModule,
   ],
+  providers: [ChatGateway],
 })
 export class AppModule {}

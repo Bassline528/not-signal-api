@@ -1,8 +1,8 @@
 import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { UsersService } from 'src/users/users.service';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { UserService } from 'src/user/user.service';
 import AuthDto from './dto/auth.dto';
 import {hashData, compareHash } from '../utils/hash.util';
 import { match } from 'assert';
@@ -14,7 +14,7 @@ export class AuthService {
   constructor(
     private jwtService: JwtService,
     private configService: ConfigService,
-    private usersService: UsersService,
+    private usersService: UserService,
   ) {}
 
   async signin(authDto: AuthDto) {
@@ -26,6 +26,7 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
+    
 
     const passwordMatchs = await compareHash(password, user.password);
 
@@ -104,6 +105,17 @@ export class AuthService {
     await this.usersService.update(userId, {
       refreshToken: hashedRefreshToken,
     });
+  }
+
+  async verifyAccessToken(token: string) : Promise<JwtPayload> {
+    try {
+      const payload = await this.jwtService.verifyAsync<JwtPayload>(token, {
+        secret: this.configService.get<string>('AUTH_ACCESS_SECRET'),
+      });
+      return payload;
+    } catch (error) {
+      throw new UnauthorizedException('Access Denied');
+    }
   }
 
   async getTokens(payload: JwtPayload) {
